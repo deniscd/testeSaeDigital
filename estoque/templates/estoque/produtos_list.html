@@ -1,4 +1,13 @@
-<html>
-    <p>Hi there!</p>
-    <p>It works!</p>
-</html>
+{% extends 'estoque/base.html' %}
+
+{% block content %}
+    {% for produto in produtos %}
+        <div class="produto">
+            <div class="date">
+                <p>published: {{ produto.dtCriacao }}</p>
+            </div>
+            <h1><a href="">{{ produto.idProduto }}</a></h1>
+            <p>{{ produto.strProduto }}</p>
+        </div>
+    {% endfor %}
+{% endblock content %}
