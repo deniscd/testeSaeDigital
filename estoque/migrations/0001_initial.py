@@ -17,10 +17,8 @@ class Migration(migrations.Migration):
             name='Produtos',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', primary_key=True, serialize=False, auto_created=True)),
-                ('strProduto', models.TextField()),
+                ('strProduto', models.CharField(max_length=200)),
                 ('dtCriacao', models.DateTimeField(default=django.utils.timezone.now)),
-                ('published_date', models.DateTimeField(blank=True, null=True)),
-                ('idProduto', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
             ],
         ),
     ]

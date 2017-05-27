@@ -2,14 +2,9 @@ from django.db import models
 from django.utils import timezone
 
 class Produtos(models.Model):
-    idProduto = models.ForeignKey('auth.User')
-    strProduto = models.TextField()
+    strProduto = models.CharField(max_length=200)
     dtCriacao = models.DateTimeField(
         default=timezone.now
-    )
-
-    published_date = models.DateTimeField(
-        blank=True, null=True
     )
 
     def cadastro_produto(self):
@@ -21,3 +16,17 @@ class Produtos(models.Model):
 
     def calcula_preco_medio(self):
         return self.strProduto
+
+class Compra(models.Model):
+    dtCompra = models.DateTimeField(
+        default=timezone.now
+    )
+    vlrCompra = models.DecimalField(max_digits=5, decimal_places=2, null=False)
+
+
+class ItensCompra(models.Model):
+    Compra = models.ForeignKey('Compra')
+    Produto = models.ForeignKey('Produtos')
+    vlrCompra = models.DecimalField(max_digits=5, decimal_places=2, null=False)
+    vlrMedioProduto = models.DecimalField(max_digits=5, decimal_places=2, null=False)
+    Qtde = models.IntegerField()

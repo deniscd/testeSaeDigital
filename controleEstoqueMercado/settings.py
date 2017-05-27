@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'estoque',
+    'crispy_forms',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -73,7 +74,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'controleEstoqueMercado.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
@@ -104,3 +104,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+LOGIN_REDIRECT_URL = 'pagina_inicial'

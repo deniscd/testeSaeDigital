@@ -6,4 +6,4 @@ class ProdutosForm(forms.ModelForm):
 
     class Meta:
         model = Produtos
-        fields = ('idProduto', 'strProduto')
+        fields = ('strProduto',)

@@ -7,16 +7,14 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Produto</th>
                     <th>Data Inclusão</th>
                 </tr>
             </thead>
             <tbody>
-                {% for produto in produtos %}
+                {% for compra in compras %}
                     <tr class="produto">
-                        <td class="date">{{ produto.id }}</td>
-                        <td>{{ produto.strProduto }}</td>
-                        <td>{{ produto.dtCriacao }}</td>
+                        <td class="date">{{ compra.id }}</td>
+                        <td>{{ compra.dtCompra }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
