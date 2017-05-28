@@ -10,6 +10,7 @@ from django.views.generic import View, TemplateView, CreateView
 from django.core import serializers
 from django.http import JsonResponse
 import json as simplejson
+import decimal
 
 
 # pagina inicial
@@ -39,6 +40,7 @@ def produto_new(request):
         form = ProdutosForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
+            post.vlrMedioProduto = 0
             post.save()
             return redirect('produtos_list')
     else:
@@ -108,6 +110,8 @@ def compra(request):
             forms = forms.save(commit=False)
             forms.save()
             formset.save()
+            print('Aguardando')
+            calcula_preco_medio()
             return HttpResponseRedirect('/compra/list/')
 
     else:
@@ -149,3 +153,18 @@ class itens_view(CreateView):
         else:
             return self.render_to_response(self.get_context_data(form=form))
 '''
+
+def calcula_preco_medio():
+    print('Em execução')
+    produtos = Produtos.objects.filter(dtCriacao__lte=timezone.now()).order_by('dtCriacao')
+    for produto in produtos:
+        intens = ItensCompra.objects.filter(Produto_id=produto.id)
+        vlr_compra = 0
+        cont_itens = 0
+        for item in intens:
+            vlr_compra += decimal.Decimal(item.vlrCompra)
+        if cont_itens == 0:
+            cont_itens = 1
+        valor_medio = decimal.Decimal(vlr_compra) / decimal.Decimal(cont_itens)
+        Produtos.objects.filter(pk=produto.id).update(vlrMedioProduto=valor_medio)
+        print('Executados')
