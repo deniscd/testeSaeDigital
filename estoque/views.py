@@ -56,7 +56,6 @@ def compras_list(request):
     compras = Compra.objects.filter(dtCompra__lte=timezone.now(),).order_by('dtCompra')
     data = '{"compra": ['
     cont_compra = 0
-    cont_itens = 0
     for itemcompra in compras:
         cont_compra += 1
         intens = ItensCompra.objects.filter(Compra_id=itemcompra.id)
@@ -65,6 +64,7 @@ def compras_list(request):
         data += '"vlrCompra": ' + str(itemcompra.vlrCompra) + ','
         data += '"data": "' + str(itemcompra.dtCompra.strftime('%d/%m/%Y')) + '",'
         data += '"itens": ['
+        cont_itens = 0
         for item in intens:
             cont_itens += 1
             data += '{'
@@ -83,7 +83,9 @@ def compras_list(request):
         else:
             data += ']}'
     data += ']}'
+    print(data) 
     decoded_json = simplejson.loads(data)
+    
     return render_to_response('estoque/compras_list.html', {'results':decoded_json['compra']})
     
 #Cria uma nova compra

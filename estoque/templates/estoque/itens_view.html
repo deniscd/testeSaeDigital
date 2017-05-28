@@ -10,9 +10,10 @@
     
             $("#add-item").click(function(ev) {
                 ev.preventDefault();
-                var count = $('#order').children().length;
+                //var count = $('#order').children().length;
+                var count = $('#compraItens tbody').children().length;
                 var tmplMarkup = $("#item-order").html();
-                var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+                var compiledTmpl = tmplMarkup.replace(/-0-/g, '-'+String(count)+'-');
                 $("#compraItens tbody").append(compiledTmpl);
                 geral();
 
@@ -32,7 +33,7 @@
             var soma = 0
             $(".vlrTotalItem").each(function() {
                 if ($(this).html() > 0 ){
-                    soma = soma + $(this).html();
+                    soma = parseFloat(soma) + parseFloat($(this).html());
                 }
             });
             $("#id_main-vlrCompra").val(parseFloat(soma).toFixed(2));
