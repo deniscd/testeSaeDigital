@@ -2,22 +2,24 @@
 <html>
     <head>
         <title>controle de Estoque</title>
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-        <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/css.css' %}">
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <link rel="stylesheet" href="{% static 'css/jquery-ui.css' %}">
 
-        <script src="{% static 'js/jquery-1.4.4.min.js' %}"></script>
+        <script src="{% static 'js/jquery-1.12.4.js' %}"></script>
+        <script src="{% static 'js/jquery-ui.js' %}"></script>
     </head>
     <body>
         <div class="page-header">
-            <a href="{% url 'estoque.views.produto_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
-            <h1><a href="/">Produtos</a></h1>
+            <a href="{% url 'estoque.views.index' %}" class="top-menu"><div class="btVoltar"></div></a>
+            <h1><a href="/" id="texto_topo"></a></h1>
         </div>
 
         <div class="content container">
-            <div class="row">
-                <div class="col-md-8">
+            <div class="">
+                <div class="">
                 {% block content %}
                 {% endblock %}
                 </div>

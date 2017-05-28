@@ -1,24 +1,43 @@
 {% extends 'estoque/base.html' %}
 
 {% block content %}
+    <script>
+        $(document).ready(function(){
+            $("#texto_topo").html('Lista de Compras');
+            $( "#accordion" ).accordion();
+        });
+    </script>
+    <script>
+  
+  </script>
 <div class="container">
-    <div class="table-responsive">          
-        <table id="list" class="table table-hover table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Data Inclusão</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for compra in compras %}
-                    <tr class="produto">
-                        <td class="date">{{ compra.id }}</td>
-                        <td>{{ compra.dtCompra }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+    <div id="accordion">
+        {% for compra in results %}
+            <h3>Itens comprados no dia: {{ compra.data }}</h3>
+            <div>
+                <table id="compraItens" class="table table-hover table-bordered table-striped">
+                    <thead>
+                        <th>Produto:</th>
+                        <th>valor do produto:</th>
+                        <th>Quantidade:</th>
+                        <th>Total:</th>
+                    </thead>
+                    <tbody>
+                        {% for item in compra.itens %}
+                            <tr>
+                                <td>{{ item.produto }}</td>
+                                <td>{{ item.valor }}</td>
+                                <td>{{ item.qtde }}</td>
+                                <td>{{ item.vlrTotalItem }}</td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td colspan="4">Total da compra: {{ compra.vlrCompra }}</td>                            
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        {% endfor %}
+    </div>    
 </div>
 {% endblock content %}

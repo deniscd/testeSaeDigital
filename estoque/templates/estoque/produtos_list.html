@@ -1,6 +1,11 @@
 {% extends 'estoque/base.html' %}
 
 {% block content %}
+    <script>
+        $(document).ready(function(){
+            $("#texto_topo").html('Lista de Produtos');
+        });
+    </script>
 <div class="container">
     <div class="table-responsive">          
         <table id="list" class="table table-hover table-bordered table-striped">
@@ -16,7 +21,7 @@
                     <tr class="produto">
                         <td class="date">{{ produto.id }}</td>
                         <td>{{ produto.strProduto }}</td>
-                        <td>{{ produto.dtCriacao }}</td>
+                        <td>{{ produto.dtCriacao|date:"d/m/Y" }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

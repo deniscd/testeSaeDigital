@@ -6,6 +6,7 @@ class Produtos(models.Model):
     dtCriacao = models.DateTimeField(
         default=timezone.now
     )
+    vlrMedioProduto = models.DecimalField(max_digits=5, decimal_places=2, null=False)
 
     def cadastro_produto(self):
         self.published_date = timezone.now()
@@ -28,5 +29,4 @@ class ItensCompra(models.Model):
     Compra = models.ForeignKey('Compra')
     Produto = models.ForeignKey('Produtos')
     vlrCompra = models.DecimalField(max_digits=5, decimal_places=2, null=False)
-    vlrMedioProduto = models.DecimalField(max_digits=5, decimal_places=2, null=False)
     Qtde = models.IntegerField()

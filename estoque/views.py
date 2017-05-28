@@ -4,9 +4,13 @@ from django.utils import timezone
 from .models import Produtos, Compra, ItensCompra
 from .produto import ProdutosForm
 from .compra import CompraForm, ItensCompraForms
-from django.http import HttpResponseRedirect # Funcao para redirecionar o usuario
-from django.contrib.auth.forms import UserCreationForm # Formulario de criacao de usuarios
+from django.http import HttpResponseRedirect, HttpResponse
+from django.contrib.auth.forms import UserCreationForm
 from django.views.generic import View, TemplateView, CreateView
+from django.core import serializers
+from django.http import JsonResponse
+import json as simplejson
+
 
 # pagina inicial
 #class IndexView(TemplateView):
@@ -43,9 +47,43 @@ def produto_new(request):
 
 #lista de compras
 def compras_list(request):
-    compras = Compra.objects.filter(dtCompra__lte=timezone.now()).order_by('dtCompra')
-    return render(request, 'estoque/compras_list.html', {'compras': compras})
-
+    #compras = Compra.objects.filter(dtCompra__lte=timezone.now(),).order_by('dtCompra')
+    #return render(request, 'estoque/compras_list.html', {'compras': compras})
+    #compras = Compra.objects.filter(dtCompra__lte=timezone.now()).order_by('dtCompra')
+    #return render_to_response('estoque/compras_list.html', {'compras': compras}, context_instance=RequestContext(request))
+    compras = Compra.objects.filter(dtCompra__lte=timezone.now(),).order_by('dtCompra')
+    data = '{"compra": ['
+    cont_compra = 0
+    cont_itens = 0
+    for itemcompra in compras:
+        cont_compra += 1
+        intens = ItensCompra.objects.filter(Compra_id=itemcompra.id)
+        data += '{'
+        data += '"id": ' + str(itemcompra.id) + ','
+        data += '"vlrCompra": ' + str(itemcompra.vlrCompra) + ','
+        data += '"data": "' + str(itemcompra.dtCompra.strftime('%d/%m/%Y')) + '",'
+        data += '"itens": ['
+        for item in intens:
+            cont_itens += 1
+            data += '{'
+            str_produto = Produtos.objects.values_list('strProduto', flat=True).get(pk=item.Produto_id)
+            vlr_total_item = item.Qtde * item.vlrCompra
+            data += '"produto": "' + str(str_produto) + '",'
+            data += '"qtde": ' + str(item.Qtde) + ','
+            data += '"valor": ' + str(item.vlrCompra) + ','
+            data += '"vlrTotalItem": ' + str(vlr_total_item)
+            if cont_itens < len(intens):
+                data += '},'
+            else:
+                data += '}'
+        if cont_compra < len(compras):
+            data += ']},'
+        else:
+            data += ']}'
+    data += ']}'
+    decoded_json = simplejson.loads(data)
+    return render_to_response('estoque/compras_list.html', {'results':decoded_json['compra']})
+    
 #Cria uma nova compra
 def compras_new(request):
     if request.method == "POST":
@@ -70,7 +108,7 @@ def compra(request):
             forms = forms.save(commit=False)
             forms.save()
             formset.save()
-            return HttpResponseRedirect('/pedido/')
+            return HttpResponseRedirect('/compra/list/')
 
     else:
         forms = CompraForm(instance=compra_forms, prefix='main')

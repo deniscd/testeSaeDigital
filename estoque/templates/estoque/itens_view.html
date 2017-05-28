@@ -5,12 +5,16 @@
 {% block content %}
     <script>
         $(document).ready(function(){
+    
+            $("#texto_topo").html('Compra de Produtos');
+    
             $("#add-item").click(function(ev) {
                 ev.preventDefault();
                 var count = $('#order').children().length;
                 var tmplMarkup = $("#item-order").html();
                 var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
-                $("div#order").append(compiledTmpl);
+                $("#compraItens tbody").append(compiledTmpl);
+                geral();
 
                 // update form count
                 $('#id_product-TOTAL_FORMS').attr('value', count + 1);
@@ -20,43 +24,90 @@
                     scrollTop: $("#add-item").position().top-200
                 }, 800);
             });
+            
+            geral();
         });
+
+        function somaVlrCompra(numero) { 
+            var soma = 0
+            $(".vlrTotalItem").each(function() {
+                if ($(this).html() > 0 ){
+                    soma = soma + $(this).html();
+                }
+            });
+            $("#id_main-vlrCompra").val(parseFloat(soma).toFixed(2));
+        }
+
+        function geral(numero) { 
+            $("input[name*='Qtde']").blur(function() {
+                var parentTag = $(this).closest( "tr" );
+                var strValor = parentTag.find("input[name*='vlrCompra']").val();
+                var intQtde = parentTag.find("input[name*='Qtde']").val();
+                var totalCompra = (strValor * intQtde);
+
+                parentTag.find(".vlrTotalItem").html(parseFloat(totalCompra).toFixed(2));
+                somaVlrCompra();
+            });
+
+            $("input[type=hidden").closest("td").remove();
+
+            $("#id_main-vlrCompra").attr('disabled','disabled');
+            $("input[name*='vlrMedioProduto']").attr('disabled','disabled');
+            
+        }
     </script>
 
-    <div class="row">
-        <div class="col-md-6 col-md-offset-3">
-            <h1 class="page-header text-center lead">Cadastro Compras</h1>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div id="boxContainer">
             <form action="" method="POST">
+                <legend class="lead">Itens</legend>
+
+                <div id="order" class="form-inline form-group">
+                    <!--{% for item_order_form in formset  %}
+                        <div id="item-{{ forloop.counter0 }}" class="intensbox">
+                            {{ item_order_form }}
+                        </div>
+                    {% endfor %}-->
+                    <table id="compraItens" class="table table-hover table-bordered table-striped">
+                        <thead>
+                                <th>Novo produto:</th>
+                                <th>valor do produto:</th>
+                                <th>Valor médio:</th>
+                                <th>Quantidade:</th>
+                                <th>Total:</th>
+                        </thead>
+                        <tbody>
+                                <tr>
+                                    {% for form in formset %}
+                                        {% for field in form %}
+                                            <td>{{ field }}</td>
+                                        {% endfor %}
+                                    {% endfor %}
+                                    <td class="vlrTotalItem"></td>
+                                </tr>
+                        </tbody>
+                    </table>
+                    <a class="btn btn-info" id="add-item"><i class="fa fa-plus"></i> Add Item</a>
+                </div>
+
                 {% csrf_token %}
                 {{ forms|crispy }}
                 {{ formset.management_form }}
 
-                <legend class="lead">PRODUTOS</legend>
-
-                <div id="order" class="form-inline form-group">
-                    {% for item_order_form in formset %}
-                        <div id="item-{{ forloop.counter0 }}">
-                            {{ item_order_form|crispy }}
-                        </div>
-                    {% endfor %}
-                </div>
-
-                <a class="btn btn-info" id="add-item"><i class="fa fa-plus"></i> Add Item</a>
-
-                <div class="form-inline buttons">
-                    <a href="{% url 'compra' %}" class="btn btn-warning pull-right"><i class="fa fa-times"></i> Cancelar</a>
-                    <button class="btn btn-primary pull-right" value="Save"><i class="fa fa-floppy-o"></i> Salvar</button>
+                <div class="form-inline buttons boxBt">
+                    <a href="{% url 'compra' %}" class="btn btn-warning pull-right btItens"><i class="fa fa-times"></i> Cancelar</a>
+                    <button class="btn btn-primary pull-right btItens" value="Save"><i class="fa fa-floppy-o"></i> Salvar</button>
                 </div>
             </form>
-    </div>    
+        </div>    
 
     <script type="text/html" id="item-order">
-        <div id="item-__prefix__" style="margin-top: 10px">
-                {{ formset.empty_form|crispy }}
-        </div>
+        <tr>
+            {% for form in formset %}
+                {% for field in form %}
+                    <td>{{ field }}</td>
+                {% endfor %}
+            {% endfor %}
+            <td class="vlrTotalItem"></td>
+        </tr>
     </script>
 {% endblock %}
