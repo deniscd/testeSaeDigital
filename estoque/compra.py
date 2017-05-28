@@ -20,5 +20,4 @@ class ItensCompraForms(forms.ModelForm):
             'Produto': 'Novo produto',
             'vlrCompra': 'valor do produto',
             'Qtde': 'Quantidade',
-            #'vlrMedioProduto': 'Valor médio',
         }

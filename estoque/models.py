@@ -8,10 +8,6 @@ class Produtos(models.Model):
     )
     vlrMedioProduto = models.DecimalField(max_digits=5, decimal_places=2, null=False)
 
-    def cadastro_produto(self):
-        self.published_date = timezone.now()
-        self.save()
-
     def __str__(self):
         return self.strProduto
 
